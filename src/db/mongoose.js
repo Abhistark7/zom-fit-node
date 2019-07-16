@@ -3,6 +3,7 @@ const City = require('./model/city')
 const Center = require('./model/center')
 const User = require('./model/user')
 const Activity = require('./model/activity')
+const Booking = require('./model/booking')
 
 mongoose.connect('mongodb://127.0.0.1:27017/zomfit', {
     useNewUrlParser: true,
@@ -72,17 +73,6 @@ const fetchUserById = (userId) => {
     })
 }
 
-// const getCentersByIds = (centerIdArray) => {
-//     return new Promise((res, rej) => {
-//         Center.find({centerId: {
-//             $in: centerIdArray}}).then((result) => {
-//             res(result)
-//         }).catch((error) => {
-//             rej(error)
-//         })
-//     }) 
-// }
-
 const getCentersByIds = (centerIdArray) => {
     return new Promise((res, rej) => {
         Center.find({centerId : centerIdArray})
@@ -115,6 +105,26 @@ const getCenterById = (id) => {
     }) 
 }
 
+const newBooking = (userId, time, date, centerName, centerImageUrl, activityName, activityIconUrl, cityName) => {
+    return new Promise((res, rej) => {
+        const booking = new Booking({
+            userId,
+            time,
+            centerName,
+            centerImageUrl,
+            cityName,
+            date,
+            activityName,
+            activityIconUrl
+        })
+        booking.save().then((result) => {
+            res('Success')
+        }).catch((error) => {
+            rej('An error occurred')
+        })
+    })
+}
+
 module.exports = {
     getAllCities: getAllCities,
     getAllCenters: getAllCenters,
@@ -122,5 +132,6 @@ module.exports = {
     login: login,
     getCentersByIds: getCentersByIds,
     getCenterById: getCenterById,
-    getActivityByIds: getActivityByIds
+    getActivityByIds: getActivityByIds,
+    newBooking: newBooking
 }

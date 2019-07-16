@@ -89,6 +89,28 @@ app.post('/getActivitiesById', (req, res) => {
     })
 })
 
+app.post('/bookActivity', (req, res) => {
+    console.log('Booking now...')
+    mongoose.newBooking(req.body.userId,
+        req.body.time,
+        req.body.centerName,
+        req.body.centerImageUrl,
+        req.body.cityName,
+        req.body.date,
+        req.body.activityName,
+        req.body.activityIconUrl).then((result) => {
+            res.send({
+                status: true,
+                message: result
+            })
+        }).catch((error) => {
+            res.send({
+                status: false,
+                message: eroor
+            })
+        })
+})
+
 
 
 app.listen(port, () => {

@@ -1,11 +1,6 @@
 const mongoose = require('mongoose')
 
 const Booking = mongoose.model('booking', {
-    bookingId: {
-        type: String,
-        required: true,
-        trim: true
-    },
     userId: {
         type: String,
         required: true,
@@ -15,14 +10,27 @@ const Booking = mongoose.model('booking', {
         type: String,
         required: true,
         trim: true
-    },
+    }, 
     status: {
         type: String,
         required: true,
         trim: true,
-        default: "UPCOMING"
+        default: 'UPCOMING'
     },
-    activityId: {
+    centerName: {
+        type: String,
+        trim: true
+    },
+    centerImageUrl: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    cityName: {
+        type: String,
+        trim: true
+    },
+    date: {
         type: String,
         trim: true
     },
@@ -31,18 +39,6 @@ const Booking = mongoose.model('booking', {
         trim: true
     },
     activityIconUrl: {
-        type: String,
-        trim: true
-    },
-    centerId: {
-        type: String,
-        trim: true
-    },
-    centerName: {
-        type: String,
-        trim: true
-    },
-    cityName: {
         type: String,
         trim: true
     }
