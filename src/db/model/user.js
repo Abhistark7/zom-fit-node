@@ -2,20 +2,17 @@ const validator = require('validator')
 const mongoose = require('mongoose')
 
 const User = mongoose.model('user', {
+    userId: {
+        type: String,
+        trim: true
+    },
     name: {
         type: String,
         required: true,
         trim: true
     },
     address: {
-        type: Array.String,
-        required: true,
-        default: 0,
-        validate(value) {
-            if (value < 0) {
-                throw new Error('Age must be a positive number')
-            }
-        }
+        type: [{type: String}]
     },
     email: {
         type: String,

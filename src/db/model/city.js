@@ -11,7 +11,7 @@ const City = mongoose.model('city', {
         required: true,
         trim: true
     },
-    activityIdList: {
+    centerIdList: {
         type: [{type: String}]
     },
     imageUrl: {

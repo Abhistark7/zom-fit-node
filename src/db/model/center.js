@@ -16,6 +16,10 @@ const Center = mongoose.model('center', {
         required: true,
         trim: true
     },
+    rating: {
+        type: String,
+        trim: true
+    },
     activityIdList: {
         type: [{type: String}]
     },
