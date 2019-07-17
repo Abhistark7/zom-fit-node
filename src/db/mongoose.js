@@ -105,7 +105,7 @@ const getCenterById = (id) => {
     }) 
 }
 
-const newBooking = (userId, time, date, centerName, centerImageUrl, activityName, activityIconUrl, cityName) => {
+const newBooking = (userId, time, centerName, centerImageUrl, cityName, date, activityName, activityIconUrl, activityId, timingId) => {
     return new Promise((res, rej) => {
         const booking = new Booking({
             userId,
@@ -115,14 +115,64 @@ const newBooking = (userId, time, date, centerName, centerImageUrl, activityName
             cityName,
             date,
             activityName,
-            activityIconUrl
+            activityIconUrl,
         })
-        booking.save().then((result) => {
-            res('Success')
-        }).catch((error) => {
-            rej('An error occurred')
+        console.log('checking max count')
+        updateBookingCount(activityId, timingId).then((result) => {
+            booking.save().then((result) => {
+                console.log('making booking')
+                    res('Success')
+            }).catch((error) => {
+                rej('An error occurred')
+            })
+        }).catch((eroor) => {
+            rej('Booking limit reached')
+        })   
+    })
+}
+
+const updateBookingCount = (activityId, timingId) => {
+    return new Promise((res, rej) => {
+        Activity.find({activityId : activityId}).then((result) => {
+            timingId--
+            timingList = result[0].timinglist
+            if(timingList[timingId].maxCount > timingList[timingId].bookedCount) {
+                timingList[timingId].bookedCount++
+                Activity.update({activityId}, {
+                    '$set': {
+                        timinglist: timingList
+                    }
+                }).then((result) => {
+                    res(result)
+                }).catch((error) => {
+                    rej(error)
+                })
+            }
+            res(result)
         })
     })
+}
+
+const getUpcomingBooking = (userId) => {
+    return new Promise((res, rej) => {
+        Booking.find({userId: userId, status: 'UPCOMING'}).then((result) => {
+            res(result)
+        }).catch((error) => {
+            rej(error)
+        })
+    })
+    
+}
+
+const getCompletedBooking = (userId) => {
+    return new Promise((res, rej) => {
+        Booking.find({userId: userId, status: 'COMPLETED'}).then((result) => {
+            res(result)
+        }).catch((error) => {
+            rej(error)
+        })
+    })
+    
 }
 
 module.exports = {
@@ -133,5 +183,7 @@ module.exports = {
     getCentersByIds: getCentersByIds,
     getCenterById: getCenterById,
     getActivityByIds: getActivityByIds,
-    newBooking: newBooking
+    newBooking: newBooking,
+    getUpcomingBooking: getUpcomingBooking,
+    getCompletedBooking: getCompletedBooking
 }

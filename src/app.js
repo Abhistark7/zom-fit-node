@@ -98,7 +98,9 @@ app.post('/bookActivity', (req, res) => {
         req.body.cityName,
         req.body.date,
         req.body.activityName,
-        req.body.activityIconUrl).then((result) => {
+        req.body.activityIconUrl,
+        req.body.activityId,
+        req.body.timingId).then((result) => {
             res.send({
                 status: true,
                 message: result
@@ -109,6 +111,40 @@ app.post('/bookActivity', (req, res) => {
                 message: eroor
             })
         })
+})
+
+app.post("/getUpcomingBooking", (req, res) => {
+    console.log('Getting upcoming booking...')
+    mongoose.getUpcomingBooking(req.body.userId).then((result) => {
+        res.send({
+            status: true,
+            message: 'Success',
+            bookingList: result
+        })
+    }).catch((error) => {
+        res.send({
+            status: false,
+            message: 'An error occured',
+            bookingList: []
+        })
+    })
+})
+
+app.post("/getCompletedBooking", (req, res) => {
+    console.log('Getting upcoming booking...')
+    mongoose.getCompletedBooking(req.body.userId).then((result) => {
+        res.send({
+            status: true,
+            message: 'Success',
+            bookingList: result
+        })
+    }).catch((error) => {
+        res.send({
+            status: false,
+            message: 'An error occured',
+            bookingList: []
+        })
+    })
 })
 
 
