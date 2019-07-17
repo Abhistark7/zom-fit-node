@@ -207,6 +207,40 @@ app.post('/unsaveCenter', (req, res) => {
     })
 })
 
+app.post('/getSavedCenter', (req, res) => {
+    console.log('getting saved centers for user id ', req.body.userId)
+    mongoose.getSavedCenters(req.body.userId).then((result) => {
+        res.send({
+            status: true,
+            message: 'Success',
+            savedCenterList: result
+        })
+    }).catch((error) => {
+        res.send({
+            status: false,
+            message: 'Failed',
+            savedCenterList: []
+        })
+    })
+})
+
+app.post('/getLikedActivities', (req, res) => {
+    console.log('getting liked for user id ', req.body.userId)
+    mongoose.getLikedActivity(req.body.userId).then((result) => {
+        res.send({
+            status: true,
+            message: 'Success',
+            likedActivityList: result
+        })
+    }).catch((error) => {
+        res.send({
+            status: false,
+            message: 'Failed',
+            likedActivityList: []
+        })
+    })
+})
+
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)

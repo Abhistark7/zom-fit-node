@@ -257,6 +257,27 @@ const unsaveCenter = (centerId, userId) => {
     })
 }
 
+const getSavedCenters = (userId) => {
+    return new Promise((res, rej) => {
+        Center.find({likedUserIds: userId}).then((result) => {
+            res(result)
+        }).catch((error) => {
+            rej(error)
+        })
+    })
+}
+
+const getLikedActivity = (userId) => {
+    return new Promise((res, rej) => {
+        Activity.find({likedUserIds: userId}).then((result) => {
+            res(result)
+        }).catch((error) => {
+            rej(error)
+        })
+    })
+}
+
+
 module.exports = {
     getAllCities: getAllCities,
     getAllCenters: getAllCenters,
@@ -271,5 +292,7 @@ module.exports = {
     likeActivity: likeActivity,
     dislikeActivity: dislikeActivity,
     saveCenter: saveCenter,
-    unsaveCenter: unsaveCenter
+    unsaveCenter: unsaveCenter,
+    getSavedCenters: getSavedCenters,
+    getLikedActivity: getLikedActivity
 }
