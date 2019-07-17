@@ -26,7 +26,10 @@ const Center = mongoose.model('center', {
     imageUrl: {
         type: String,
         trim: true
-    }
+    },
+    likedUserIds: {
+        type: [{type: String}]
+    },
 })
 
 module.exports = Center

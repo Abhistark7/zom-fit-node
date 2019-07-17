@@ -113,7 +113,7 @@ app.post('/bookActivity', (req, res) => {
         })
 })
 
-app.post("/getUpcomingBooking", (req, res) => {
+app.post('/getUpcomingBooking', (req, res) => {
     console.log('Getting upcoming booking...')
     mongoose.getUpcomingBooking(req.body.userId).then((result) => {
         res.send({
@@ -130,7 +130,7 @@ app.post("/getUpcomingBooking", (req, res) => {
     })
 })
 
-app.post("/getCompletedBooking", (req, res) => {
+app.post('/getCompletedBooking', (req, res) => {
     console.log('Getting upcoming booking...')
     mongoose.getCompletedBooking(req.body.userId).then((result) => {
         res.send({
@@ -147,6 +147,65 @@ app.post("/getCompletedBooking", (req, res) => {
     })
 })
 
+app.post('/likeActivity', (req, res) => {
+    console.log('Liking activity with id ', req.body.activityId)
+    mongoose.likeActivity(req.body.activityId, req.body.userId).then((result) => {
+        res.send({
+            status: true,
+            message: 'Success'
+        })
+    }).catch((error) => {
+        res.send({
+            status: false,
+            message: error
+        })
+    })
+})
+
+app.post('/dislikeActivity', (req, res) => {
+    console.log('Disliking activity with id ', req.body.activityId)
+    mongoose.dislikeActivity(req.body.activityId, req.body.userId).then((result) => {
+        res.send({
+            status: true,
+            message: 'Success'
+        })
+    }).catch((result) => {
+        res.send({
+            status: false,
+            message: 'Failed'
+        })
+    })
+})
+
+app.post('/saveCenter', (req, res) => {
+    console.log('Saving center with id ', req.body.centerId)
+    mongoose.saveCenter(req.body.centerId, req.body.userId).then((result) => {
+        res.send({
+            status: true,
+            message: 'Success'
+        })
+    }).catch((error) => {
+        res.send({
+            status: false,
+            message: error
+        })
+    })
+})
+
+app.post('/unsaveCenter', (req, res) => {
+    console.log('Unsaving center with id', req.body.centerId)
+    mongoose.unsaveCenter(req.body.centerId, req.body.userId).then((result) => {
+        res.send({
+            status: true,
+            message: 'Success'
+        })
+    }).catch((result) => {
+        res.send({
+            status: false,
+            message: 'Failed'
+        })
+    })
+})
 
 
 app.listen(port, () => {

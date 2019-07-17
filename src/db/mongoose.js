@@ -175,6 +175,88 @@ const getCompletedBooking = (userId) => {
     
 }
 
+const likeActivity = (activityId, userId) => {
+    return new Promise((res, rej) => {
+        Activity.find({activityId}).then((re) => {
+            likedUserlist = re[0].likedUserIds
+            likedUserlist.push(userId)
+            Activity.update({activityId}, {
+                '$set' : {
+                    likedUserIds: likedUserlist
+                }
+            }).then((result) => [
+                res(result)
+            ]).catch((error) => {
+                rej(error)
+            })
+        }).catch((er) => {
+            console.log(er)
+        })
+    })
+}
+
+const dislikeActivity = (activityId, userId) => {
+    return new Promise((res, rej) => {
+        Activity.find({activityId}).then((re) => {
+            if(re.length != 0) {
+            likedUserlist = re[0].likedUserIds.filter((e) => e !== userId)
+            Activity.update({activityId}, {
+                '$set' : {
+                    likedUserIds: likedUserlist
+                }
+            }).then((result) => [
+                res(result)
+            ]).catch((error) => {
+                rej(error)
+            })
+        }
+        }).catch((er) => {
+            console.log(er)
+        })
+    })
+}
+
+const saveCenter = (centerId, userId) => {
+    return new Promise((res, rej) => {
+        Center.find({centerId}).then((re) => {
+            likedUserlist = re[0].likedUserIds
+            likedUserlist.push(userId)
+            Center.update({centerId}, {
+                '$set' : {
+                    likedUserIds: likedUserlist
+                }
+            }).then((result) => [
+                res(result)
+            ]).catch((error) => {
+                rej(error)
+            })
+        }).catch((er) => {
+            console.log(er)
+        })
+    })
+}
+
+const unsaveCenter = (centerId, userId) => {
+    return new Promise((res, rej) => {
+        Center.find({centerId}).then((re) => {
+            if(re.length != 0) {
+                likedUserlist = re[0].likedUserIds.filter((e) => e !== userId)
+                Center.update({centerId}, {
+                    '$set' : {
+                        likedUserIds: likedUserlist
+                    }
+                }).then((result) => [
+                    res(result)
+                ]).catch((error) => {
+                    rej(error)
+                })
+            }
+        }).catch((er) => {
+            console.log(er)
+        })
+    })
+}
+
 module.exports = {
     getAllCities: getAllCities,
     getAllCenters: getAllCenters,
@@ -185,5 +267,9 @@ module.exports = {
     getActivityByIds: getActivityByIds,
     newBooking: newBooking,
     getUpcomingBooking: getUpcomingBooking,
-    getCompletedBooking: getCompletedBooking
+    getCompletedBooking: getCompletedBooking,
+    likeActivity: likeActivity,
+    dislikeActivity: dislikeActivity,
+    saveCenter: saveCenter,
+    unsaveCenter: unsaveCenter
 }

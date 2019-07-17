@@ -32,7 +32,10 @@ const Activity = mongoose.model('activity', {
         maxCount: Number,
         bookedCount: Number,
         isAvailable: Boolean
-    }]
+    }],
+    likedUserIds: {
+        type: [{type: String}]
+    },
 })
 
 module.exports = Activity
