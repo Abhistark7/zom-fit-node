@@ -25,6 +25,12 @@ const Activity = mongoose.model('activity', {
         required: true,
         trim: true,
     },
+    totalSlots: {
+        type: Number
+    },
+    bookedSlots: {
+        type: Number
+    },
     timinglist: [{
         id: String,
         time: String,

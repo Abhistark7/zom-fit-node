@@ -30,6 +30,16 @@ const getAllCenters = () => {
     }) 
 }
 
+const getAllActivities = () => {
+    return new Promise((res, rej) => {
+        Activity.find({}).then((result) => {
+            res(result)
+        }).catch((error) => {
+            rej(error)
+        })
+    }) 
+}
+
 const createUser = (user) => {
     const newUser = new User({
         name: user.name,
@@ -281,6 +291,7 @@ const getLikedActivity = (userId) => {
 module.exports = {
     getAllCities: getAllCities,
     getAllCenters: getAllCenters,
+    getAllActivities: getAllActivities,
     createUser: createUser,
     login: login,
     getCentersByIds: getCentersByIds,

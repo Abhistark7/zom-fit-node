@@ -23,6 +23,14 @@ app.get('/getAllCenters', (req, res) => {
     })
 })
 
+app.get('/getAllActivities', (req, res) => {
+    mongoose.getAllActivities().then((result) => {
+        res.send(result)
+    }).catch((result) => {
+        res.send('An Error occured!')
+    })
+})
+
 app.post('/signUp', (req, res) => {
     console.log('Saving new user... ', req.body)
     mongoose.createUser(req.body).then((result) => {
@@ -237,6 +245,23 @@ app.post('/getLikedActivities', (req, res) => {
             status: false,
             message: 'Failed',
             likedActivityList: []
+        })
+    })
+})
+
+app.post('/adminLogin', (req, res) => {
+    console.log('Admin Logging in...', req.body.email)
+    mongoose.login(req.body.email, req.body.password).then((result) => {
+        res.send({
+            status: true,
+            message: 'Login Successful',
+            user: result[0]
+        })
+    }).catch((error) => {
+        res.send({
+            status: false,
+            message: error,
+            user: {}
         })
     })
 })
