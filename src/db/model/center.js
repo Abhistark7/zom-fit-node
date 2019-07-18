@@ -30,6 +30,9 @@ const Center = mongoose.model('center', {
     likedUserIds: {
         type: [{type: String}]
     },
+    currentBookingCount: {
+        type: Number
+    }
 })
 
 module.exports = Center

@@ -108,7 +108,8 @@ app.post('/bookActivity', (req, res) => {
         req.body.activityName,
         req.body.activityIconUrl,
         req.body.activityId,
-        req.body.timingId).then((result) => {
+        req.body.timingId,
+        req.body.centerId).then((result) => {
             res.send({
                 status: true,
                 message: result
@@ -263,6 +264,22 @@ app.post('/adminLogin', (req, res) => {
             message: error,
             user: {}
         })
+    })
+})
+
+app.get('/getTrendingActivities', (req, res) => {
+    mongoose.getTrendingActivities().then((result) => {
+        res.send(result)
+    }).catch((result) => {
+        res.send('An Error occured!')
+    })
+})
+
+app.get('/getTrendingCenters', (req, res) => {
+    mongoose.getTrendingCenters().then((result) => {
+        res.send(result)
+    }).catch((result) => {
+        res.send('An Error occured!')
     })
 })
 

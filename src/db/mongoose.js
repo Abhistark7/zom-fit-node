@@ -40,6 +40,26 @@ const getAllActivities = () => {
     }) 
 }
 
+const getTrendingActivities = () => {
+    return new Promise((res, rej) => {
+        Activity.find({}).then((result) => {
+            res(result.sort((a, b) => (a.bookedCount > b.bookedCount) ? -1 : 1))
+        }).catch((error) => {
+            rej(error)
+        })
+    }) 
+}
+
+const getTrendingCenters = () => {
+    return new Promise((res, rej) => {
+        Center.find({}).then((result) => {
+            res(result.sort((a, b) => (a.currentBookingCount > b.currentBookingCount) ? -1 : 1))
+        }).catch((error) => {
+            rej(error)
+        })
+    }) 
+}
+
 const createUser = (user) => {
     const newUser = new User({
         name: user.name,
@@ -115,7 +135,7 @@ const getCenterById = (id) => {
     }) 
 }
 
-const newBooking = (userId, time, centerName, centerImageUrl, cityName, date, activityName, activityIconUrl, activityId, timingId) => {
+const newBooking = (userId, time, centerName, centerImageUrl, cityName, date, activityName, activityIconUrl, activityId, timingId, centerId) => {
     return new Promise((res, rej) => {
         const booking = new Booking({
             userId,
@@ -128,7 +148,7 @@ const newBooking = (userId, time, centerName, centerImageUrl, cityName, date, ac
             activityIconUrl,
         })
         console.log('checking max count')
-        updateBookingCount(activityId, timingId).then((result) => {
+        updateBookingCount(activityId, timingId, centerId).then((result) => {
             booking.save().then((result) => {
                 console.log('making booking')
                     res('Success')
@@ -141,19 +161,30 @@ const newBooking = (userId, time, centerName, centerImageUrl, cityName, date, ac
     })
 }
 
-const updateBookingCount = (activityId, timingId) => {
+const updateBookingCount = (activityId, timingId, centerId) => {
     return new Promise((res, rej) => {
         Activity.find({activityId : activityId}).then((result) => {
             timingId--
             timingList = result[0].timinglist
+            newBookedCount = result[0].bookedSlots
             if(timingList[timingId].maxCount > timingList[timingId].bookedCount) {
                 timingList[timingId].bookedCount++
+                newBookedCount++
                 Activity.update({activityId}, {
                     '$set': {
-                        timinglist: timingList
+                        timinglist: timingList,
+                        bookedSlots : newBookedCount
                     }
                 }).then((result) => {
-                    res(result)
+                    Center.update({centerId}, {
+                        '$inc' : {
+                            currentBookingCount: 1
+                        }
+                    }).then((re) => {
+                        res(result)
+                    }).catch((error) => {
+                        rej(error)
+                    })
                 }).catch((error) => {
                     rej(error)
                 })
@@ -305,5 +336,7 @@ module.exports = {
     saveCenter: saveCenter,
     unsaveCenter: unsaveCenter,
     getSavedCenters: getSavedCenters,
-    getLikedActivity: getLikedActivity
+    getLikedActivity: getLikedActivity,
+    getTrendingActivities: getTrendingActivities,
+    getTrendingCenters: getTrendingCenters
 }
