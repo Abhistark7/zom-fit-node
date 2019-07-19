@@ -18,20 +18,23 @@ const Center = mongoose.model('center', {
     },
     rating: {
         type: String,
-        trim: true
+        trim: true,
+        default: "0.0"
     },
     activityIdList: {
         type: [{type: String}]
     },
     imageUrl: {
         type: String,
-        trim: true
+        trim: true,
+        default: 'https://playo.imgix.net/PHOENIXSPORTS/PhoenixSportsHyderabad48.jpg?auto=compress,format&h=250'
     },
     likedUserIds: {
         type: [{type: String}]
     },
     currentBookingCount: {
-        type: Number
+        type: Number,
+        default: 0
     }
 })
 

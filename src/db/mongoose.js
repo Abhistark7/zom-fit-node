@@ -43,7 +43,8 @@ const getAllActivities = () => {
 const getTrendingActivities = () => {
     return new Promise((res, rej) => {
         Activity.find({}).then((result) => {
-            res(result.sort((a, b) => (a.bookedCount > b.bookedCount) ? -1 : 1))
+            result.sort((a, b) => (a.bookedCount > b.bookedCount) ? -1 : 1)
+            res(result)
         }).catch((error) => {
             rej(error)
         })
@@ -318,6 +319,197 @@ const getLikedActivity = (userId) => {
     })
 }
 
+const addCity = (cityName, cityImageUrl) => {
+    return new Promise((res, rej) => {
+        doesCityExists(cityName).then((result) => {
+            var newCity
+            if(cityImageUrl) {
+                    newCity = new City({
+                    cityId: generateRandomID(20),
+                    name: cityName,
+                    imageUrl: cityImageUrl
+                })
+            } else {
+                    newCity = new City({
+                    cityId: generateRandomID(20),
+                    name: cityName
+                })
+            }
+            newCity.save().then((result) => {
+                res(result)
+            }).catch((error) => {
+                rej(error)
+            })
+        }).catch((error) => {
+            rej('City already exists, please another one!')
+        })
+    })
+}
+
+const addCenter = (centerName, cityName, centerImageUrl) => {
+    return new Promise((res, rej) => {
+        var newCenter
+        doesCenterExists(centerName, cityName).then((result) => {
+            newCenterId = generateRandomID(20)
+            if(centerImageUrl) {
+                newCenter = new Center({
+                centerId: generateRandomID(20),
+                name: centerName,
+                cityName,
+                imageUrl: centerImageUrl
+                })
+            } else {
+                newCenter = new Center({
+                centerId: newCenterId,
+                name: centerName,
+                cityName,
+                })
+            }
+            addCenterIdToCity(cityName, newCenterId).then((re) => {
+                newCenter.save().then((result) => {
+                    res(result)
+                }).catch((error) => {
+                    rej(error)
+                })
+            }).catch((er) => {
+                rej(er)
+            })
+        }).catch((error) => {
+            rej('Center with name - ' + centerName + ' already exists in the selected city')
+        })
+    })
+}
+
+const addCenterIdToCity = (cityName, newCenterId) => {
+    return new Promise((res, rej) => {
+        City.update({name: cityName}, {
+            $push: {
+                centerIdList: newCenterId
+            }
+        }).then((result) => {
+            res()
+        }).catch((error) => {
+            rej()
+        })
+    })
+}
+
+const doesCenterExists = (centerName, cityName) => {
+    return new Promise((res, rej) => {
+        City.findOne({name: cityName}).then((result) => {
+            listOfCenterIds = result.centerIdList
+            doesCenterNameExists(listOfCenterIds, centerName).then((result) => {
+                res()
+            }).catch((error) => {
+                rej(error)
+            })
+        }).catch((error) => {
+            rej()
+        })
+    })
+}
+
+const doesCenterNameExists = (listOfCenterIds, centerName) => {
+    return new Promise((res, rej) => {
+        Center.find({
+            centerId: {
+                $in: listOfCenterIds
+            }
+        }).then((result) => {
+            if(result.length != 0) {
+                result.forEach(element => {
+                    if(element.name === centerName) {
+                        rej('Center already present')
+                    } 
+                })
+                res()
+            } else {
+                res()
+            }
+        }).catch((error) => {
+            res(error)
+        })
+    })
+}
+
+const doesCityExists = (cityName) => {
+    return new Promise((res, rej) => {
+        City.find({name: cityName}).then((result) => {
+            if(result.length == 0) {
+                res()
+            } else {
+                rej()
+            }
+        }).catch((error) => {
+            rej(error)
+        })
+    })
+}
+
+const addActivity = (activityName, cost, iconUrl, timingList, centerName) => {
+    return new Promise((res, rej) => {
+        doesActivityExists(activityName).then((res, rej) => {
+            var newActivityId = generateRandomID(20)
+            const newActivity = new Activity({
+                activityId: newActivityId,
+                name: activityName,
+                cost,
+                iconUrl,
+                totalSlots: 150,
+                timingList: timingList
+            })
+            addActivityToCenter(newActivityId, centerName).then((result) => {
+                newActivity.save().then((res) => {
+                    res()
+                }).catch((err) => {
+                    rej()
+                })
+            }).catch((error) => {
+                rej()
+            })
+        }).catch((error) => {
+            rej(error)
+        })
+    })
+}
+
+const doesActivityExists = (activityName) => {
+    return new Promise((res, rej) => {
+        Activity.find({name: activityName}).then((result) => {
+            if(result.length == 0) {
+                res()
+            } else {
+                rej('Activity already exists!')
+            }
+        }).catch((err) => {
+            rej()
+        })
+    })
+}
+
+const addActivityToCenter = (activityId, centerName) => {
+    return new Promise((res, rej) => {
+        Center.update({name: centerName}, {
+            $push: {
+                activityIdList: activityId
+            }
+        }).then((result) => {
+            res()
+        }).catch((error) => {
+            rej()
+        })
+    })
+}
+
+const generateRandomID = (length) => {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
 
 module.exports = {
     getAllCities: getAllCities,
@@ -338,5 +530,8 @@ module.exports = {
     getSavedCenters: getSavedCenters,
     getLikedActivity: getLikedActivity,
     getTrendingActivities: getTrendingActivities,
-    getTrendingCenters: getTrendingCenters
+    getTrendingCenters: getTrendingCenters,
+    addCity: addCity,
+    addCenter: addCenter,
+    addActivity: addActivity
 }

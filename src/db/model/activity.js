@@ -22,8 +22,8 @@ const Activity = mongoose.model('activity', {
     },
     iconUrl: {
         type: String,
-        required: true,
         trim: true,
+        default: 'https://image.flaticon.com/icons/svg/55/55240.svg'
     },
     totalSlots: {
         type: Number

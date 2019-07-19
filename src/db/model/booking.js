@@ -40,7 +40,7 @@ const Booking = mongoose.model('booking', {
     },
     activityIconUrl: {
         type: String,
-        trim: true
+        trim: true,
     },
     activityId: {
         type: String,

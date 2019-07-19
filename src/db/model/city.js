@@ -16,7 +16,8 @@ const City = mongoose.model('city', {
     },
     imageUrl: {
         type: String,
-        trim: true
+        trim: true,
+        default: 'https://www.telegraph.co.uk/content/dam/Travel/2018/October/melbourne-top.jpg?imwidth=450'
     }
 })
 

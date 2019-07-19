@@ -283,6 +283,51 @@ app.get('/getTrendingCenters', (req, res) => {
     })
 })
 
+app.post('/addCity', (req, res) => {
+    mongoose.addCity(req.body.cityName, req.body.cityImageUrl).then((result) => {
+        res.send({
+            status: true,
+            message: 'City added!'
+        })
+    }).catch((error) => {   
+        res.send({
+            status: false,
+            message: error
+        })
+    })
+})
+
+app.post('/addCenter', (req, res) => {
+    console.log('Adding center...')
+    mongoose.addCenter(req.body.centerName, req.body.cityName, req.body.centerImageUrl)
+    .then((result) => {
+        res.send({
+            status: true,
+            message: 'Success'
+        })
+    }).catch((error) => {
+        res.send({
+            status: false,
+            message: error
+        })
+    })
+})
+
+app.post('/addActivity', (req, res) => {
+    console.log('Adding activity...')
+    mongoose.addActivity(req.body.activityName, req.body.cost, req.body.activityIconUrl, req.body.timingList, req.body.centerName)
+    .then((result) => {
+        res.send({
+            status: true,
+            message: 'Success'
+        })
+    }).catch((error) => {
+        res.send({
+            status: false,
+            message: error
+        })
+    })
+})
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
