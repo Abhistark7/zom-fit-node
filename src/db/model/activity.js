@@ -18,7 +18,8 @@ const Activity = mongoose.model('activity', {
     },
     rating: {
         type: String,
-        trim: true
+        trim: true,
+        default: '0.0'
     },
     iconUrl: {
         type: String,
@@ -26,10 +27,12 @@ const Activity = mongoose.model('activity', {
         default: 'https://image.flaticon.com/icons/svg/55/55240.svg'
     },
     totalSlots: {
-        type: Number
+        type: Number,
+        default: 0
     },
     bookedSlots: {
-        type: Number
+        type: Number,
+        default: 0
     },
     timinglist: [{
         id: String,

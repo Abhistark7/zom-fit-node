@@ -448,9 +448,11 @@ const doesCityExists = (cityName) => {
 
 const addActivity = (activityName, cost, iconUrl, timingList, centerName) => {
     return new Promise((res, rej) => {
-        doesActivityExists(activityName).then((res, rej) => {
+        doesActivityExists(activityName).then((result) => {
             var newActivityId = generateRandomID(20)
-            const newActivity = new Activity({
+            var newActivity
+            if(iconUrl) {
+                newActivity = new Activity({
                 activityId: newActivityId,
                 name: activityName,
                 cost,
@@ -458,8 +460,17 @@ const addActivity = (activityName, cost, iconUrl, timingList, centerName) => {
                 totalSlots: 150,
                 timingList: timingList
             })
+            } else {
+                newActivity = new Activity({
+                    activityId: newActivityId,
+                    name: activityName,
+                    cost,
+                    totalSlots: 150,
+                    timingList: timingList
+                })
+            }
             addActivityToCenter(newActivityId, centerName).then((result) => {
-                newActivity.save().then((res) => {
+                newActivity.save().then((re) => {
                     res()
                 }).catch((err) => {
                     rej()
@@ -495,9 +506,9 @@ const addActivityToCenter = (activityId, centerName) => {
             }
         }).then((result) => {
             res()
+        })
         }).catch((error) => {
             rej()
-        })
     })
 }
 
