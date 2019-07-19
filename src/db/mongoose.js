@@ -458,7 +458,7 @@ const addActivity = (activityName, cost, iconUrl, timingList, centerName) => {
                 cost,
                 iconUrl,
                 totalSlots: 150,
-                timingList: timingList
+                timinglist: timingList
             })
             } else {
                 newActivity = new Activity({
@@ -466,7 +466,7 @@ const addActivity = (activityName, cost, iconUrl, timingList, centerName) => {
                     name: activityName,
                     cost,
                     totalSlots: 150,
-                    timingList: timingList
+                    timinglist: timingList
                 })
             }
             addActivityToCenter(newActivityId, centerName).then((result) => {
